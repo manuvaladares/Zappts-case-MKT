@@ -201,3 +201,51 @@ print(json.dumps(dados, indent=4, ensure_ascii=False))
         "nivel": "Iniciante"
     }
 ]
+```
+ ### Formatando com tabela (opcional)
+
+```python
+ from collections import Counter
+
+# (Opcional) mapa de cores (remova se não quiser)
+CORES = {
+    "VIP": "\033[92m",
+    "ATIVO": "\033[94m",
+    "INATIVO": "\033[90m",
+    "RISCO": "\033[91m",
+    "_reset": "\033[0m",
+}
+
+def colorizar(segmento):
+    return f"{CORES.get(segmento, '')}{segmento}{CORES['_reset'] if segmento in CORES else ''}"
+
+resultados = []
+
+header = f"{'ID':<6}{'Compras':<10}{'Gasto(R$)':<12}{'Dias Ult.':<10}{'Segmento':<15}"
+print(header)
+print("-" * len(header))
+
+for c in clientes:
+    segmento = segmenta(c['total_compras'], c['valor_total_gasto'], c['dias_ultima_compra'])
+    resultados.append({**c, 'segmento': segmento})
+    print(
+        f"{c['id_cliente']:<6}"
+        f"{c['total_compras']:<10}"
+        f"{c['valor_total_gasto']:<12.2f}"
+        f"{c['dias_ultima_compra']:<10}"
+        f"{colorizar(segmento):<15}"
+    )
+
+# Resumo
+contagem = Counter(r['segmento'] for r in resultados)
+print("\nResumo por segmento:")
+for seg, qtd in contagem.items():
+    print(f"- {seg}: {qtd}")
+
+# Top gasto por segmento
+print("\nTop gasto por segmento:")
+for seg in contagem:
+    grupo = [r for r in resultados if r['segmento'] == seg]
+    top = max(grupo, key=lambda x: x['valor_total_gasto'])
+    print(f"- {seg}: ID {top['id_cliente']} (R$ {top['valor_total_gasto']:.2f})")
+``` 
