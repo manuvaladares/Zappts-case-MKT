@@ -249,3 +249,10 @@ for seg in contagem:
     top = max(grupo, key=lambda x: x['valor_total_gasto'])
     print(f"- {seg}: ID {top['id_cliente']} (R$ {top['valor_total_gasto']:.2f})")
 ``` 
+
+
+```python
+for c in clientes:
+    segmento = segmenta(c['total_compras'], c['valor_total_gasto'], c['dias_ultima_compra'])
+    print(f"Cliente {c['id_cliente']} | Compras={c['total_compras']} | Gasto=R${c['valor_total_gasto']:.2f} | Dias Última={c['dias_ultima_compra']} -> Segmento: {segmento}")
+```
